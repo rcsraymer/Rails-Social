@@ -12,6 +12,10 @@ class User < ApplicationRecord
     has_many :text_posts, dependent: :destroy
     has_many :image_posts, dependent: :destroy
     has_many :comments, dependent: :destroy
+
+    has_secure_password
+
+    validates :email, presence: true, uniqueness: true
     
     def following?(leader)
         leaders.include? leader
@@ -21,5 +25,9 @@ class User < ApplicationRecord
         if leader != self && !following?(leader)
             leaders << leader
         end
+    end
+
+    def timeline_user_ids
+        leader_ids + [id]
     end
 end
